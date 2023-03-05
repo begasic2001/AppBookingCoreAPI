@@ -18,11 +18,12 @@ namespace TourBooking.Services
             _repository = repository;
             _mapper = mapper;
         }
-        public async Task<string> AddAsync(TDto tDto)
+        public async Task AddAsync(TDto tDto)
         {
+            var id = Guid.NewGuid().ToString();
+            tDto.Id = id;
             var entity =  _mapper.Map<TEntity>(tDto);  
             await _repository.AddAsync(entity);
-            return tDto.Id;
         }
 
         public async Task DeleteAsync(string id)
@@ -50,10 +51,14 @@ namespace TourBooking.Services
             return _mapper.Map<TDto>(entity);
         }
 
-        public Task UpdateAsync(TDto entityTDto)
+        public async Task UpdateAsync(string id,TDto entityTDto)
         {
-            var entity = _mapper.Map<TEntity>(entityTDto);
-            return _repository.UpdateAsync(entity);
+            if(id == entityTDto.Id)
+            {
+                var entity = _mapper.Map<TEntity>(entityTDto);
+                await _repository.UpdateAsync(entity);
+            }
+            
         }
     }
 }
