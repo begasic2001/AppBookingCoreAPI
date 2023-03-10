@@ -12,20 +12,19 @@ namespace LearnAPI.Models
         public DbSet<Sight> Sight { get; set; }
         public DbSet<Transport> Transport { get; set; }
         public DbSet<Tour> Tour { get; set; }
-        public DbSet<ToursCities> ToursCities { get; set;}
+        //public DbSet<ToursCities> ToursCities { get; set;}
         public DbSet<ToursSight> ToursSights { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ToursCities>()
-                  .HasKey(tc => new { tc.CityId, tc.TourId });
-            modelBuilder.Entity<ToursCities>()
-                .HasOne(t => t.Tour)
-                .WithMany(tc => tc.ToursCities)
-                .HasForeignKey(t => t.TourId);
-            modelBuilder.Entity<ToursCities>()
-                .HasOne(c => c.City)
-                .WithMany(tc => tc.ToursCities)
-                .HasForeignKey(c => c.CityId);
+
+            modelBuilder.Entity<Tour>()
+                .HasMany(tc => tc.ToursCities)
+                .WithOne(t => t.Tour)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<City>()
+                .HasMany(tc => tc.ToursCities)
+                .WithOne(c => c.City)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<ToursSight>()
                   .HasKey(ts => new { ts.SightId, ts.TourId });

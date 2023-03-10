@@ -8,6 +8,10 @@ namespace TourBooking.Helpers
     {
         public AutoMapper() {
             CreateMap<Country, CountryDto>().ReverseMap();
+            CreateMap<City, CityDto>().ReverseMap();
+            CreateMap<Sight, SightDto>().ReverseMap();
+            CreateMap<Transport, TransportDto>().ReverseMap();
+            CreateMap<Tour, TourDto>().ReverseMap();
         }
     }
 }

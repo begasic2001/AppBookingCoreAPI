@@ -13,11 +13,11 @@ namespace LearnAPI.Models
         public string Name { get; set; }
         [Required(ErrorMessage = "This field is not empty!!!")]
         public double Price { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public int MaxTourists { get; set; }
-        public Transport Transport { get; set; }
-        public ICollection<ToursCities>? ToursCities { get; set; }
+        public Transport? Transport { get; set; }
+        public ICollection<ToursCities> ToursCities { get; set; } = new List<ToursCities>();
         public ICollection<ToursSight>? ToursSights { get; set; }
         public ICollection<OrderDetail>? OrderDetails { get; set; }
     }

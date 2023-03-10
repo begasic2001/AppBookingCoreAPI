@@ -1,4 +1,6 @@
-﻿namespace TourBooking.Dto
+﻿using LearnAPI.Models;
+
+namespace TourBooking.Dto
 {
     public class CountryDto : Entity
     {

@@ -7,11 +7,12 @@ using TourBooking.Repositories;
 
 namespace TourBooking.Services
 {
-    public class CountryService : Service<Country, CountryDto> , ICountryService
+    public class TransportService : Service<Transport,TransportDto> , ITransportService
     {
-        private readonly IRepository<Country> _repository;
+        private readonly IRepository<Transport> _repository;
         private readonly IMapper _mapper;
-        public CountryService(IRepository<Country> repository, IMapper mapper) : base(repository, mapper)
+        public TransportService(IRepository<Transport> repository,IMapper mapper)
+            :base(repository,mapper)
         {
             _repository = repository;
             _mapper = mapper;

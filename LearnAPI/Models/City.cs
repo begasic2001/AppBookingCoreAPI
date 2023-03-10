@@ -11,10 +11,9 @@ namespace LearnAPI.Models
         [Required(ErrorMessage = "This field is not empty!!!")]
         [Column(TypeName = "nvarchar(255)")]
         public string CityName { get; set; }
-        public ICollection<Sight> Sights { get; set; }
-        public string CountryId { get; set; }
-        public Country Country { get; set; }
-
-        public ICollection<ToursCities>? ToursCities { get; set; }
+        public ICollection<Sight> ?Sights { get; set; }
+        public string ?CountryId { get; set; }
+        public Country ?Country { get; set; }  
+        public ICollection<ToursCities> ToursCities { get; set; } = new List<ToursCities>();
     }
 }

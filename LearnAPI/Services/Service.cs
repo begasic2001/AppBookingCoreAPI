@@ -4,6 +4,8 @@ using TourBooking.Dto;
 using TourBooking.Repositories;
 using System.Linq.Expressions;
 using System;
+using TourBooking.Interfaces;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace TourBooking.Services
 {
@@ -38,6 +40,12 @@ namespace TourBooking.Services
             return _repository.GetAll(predicate).Select(_mapper.Map<TDto>).ToList();
         }
 
+        public IEnumerable<TEntity> GetAllJoin(string[] includes = null)
+
+        {
+            return _repository.GetAllJoin(includes);
+        }
+
         public async Task<TDto> GetByIdAsync(string id)
         {
             var entity = await _repository.GetByIdAsync(id);
@@ -49,6 +57,16 @@ namespace TourBooking.Services
             var predicate = _mapper.Map<Expression<Func<TEntity, bool>>>(expression);
             var entity = await _repository.GetFirstAsync(predicate);
             return _mapper.Map<TDto>(entity);
+        }
+
+        public IEnumerable<TEntity> GetMultiJoin(Expression<Func<TEntity, bool>> expression, string[] includes = null)
+        {
+            return _repository.GetMultiJoin(expression, includes);
+        }
+
+        public IEnumerable<TEntity> GetMultiPagingJoin(Expression<Func<TEntity, bool>> filter, out int total, int index = 0, int size = 50, string[] includes = null)
+        {
+            return _repository.GetMultiPagingJoin(filter, out total, index, size, includes);    
         }
 
         public async Task UpdateAsync(string id,TDto entityTDto)

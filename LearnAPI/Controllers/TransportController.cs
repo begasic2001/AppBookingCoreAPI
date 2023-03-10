@@ -1,6 +1,4 @@
-﻿
-using LearnAPI.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TourBooking.Dto;
 using TourBooking.Helpers;
@@ -10,14 +8,14 @@ namespace TourBooking.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CountryController : ControllerBase
+    public class TransportController : ControllerBase
     {
-        private readonly ICountryService _countryService;
+        private readonly ITransportService _transportService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CountryController(ICountryService countryService, IUnitOfWork unitOfWork)
+        public TransportController(ITransportService transportService, IUnitOfWork unitOfWork)
         {
-            _countryService = countryService;
+            _transportService = transportService;
             _unitOfWork = unitOfWork;
         }
         [HttpGet]
@@ -25,7 +23,10 @@ namespace TourBooking.Controllers
         {
             try
             {
-                var a = await _countryService.GetAll();
+
+                //var res = _transportService.GetJoin();
+
+                var a = await _transportService.GetAll();
                 return Ok(a);
             }
             catch
@@ -38,7 +39,7 @@ namespace TourBooking.Controllers
         {
             try
             {
-                var a = await _countryService.GetByIdAsync(id);
+                var a = await _transportService.GetByIdAsync(id);
                 return Ok(a);
             }
             catch
@@ -47,30 +48,31 @@ namespace TourBooking.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> Add(CountryDto country)
+        public async Task<IActionResult> Add(TransportDto transport)
         {
             try
             {
-                await _countryService.AddAsync(country);
+                await _transportService.AddAsync(transport);
                 await _unitOfWork.SaveChangesAsync();
-                var newCountry = await _countryService.GetByIdAsync(country.Id);
-                return newCountry == null ? NotFound() : Ok(newCountry);
+                var newTransport = await _transportService.GetByIdAsync(transport.Id);
+                return newTransport == null ? NotFound() : Ok(newTransport);
             }
-            catch {
+            catch
+            {
                 return BadRequest();
-             }
+            }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Edit(string id ,CountryDto country)
+        public async Task<IActionResult> Edit(string id, TransportDto transport)
         {
             try
             {
-                await _countryService.UpdateAsync(id,country);
+                await _transportService.UpdateAsync(id, transport);
                 await _unitOfWork.SaveChangesAsync();
-                var editCountry = await _countryService.GetByIdAsync(country.Id);
-                return editCountry == null ? NotFound() : Ok(editCountry);
+                var editTransport = await _transportService.GetByIdAsync(transport.Id);
+                return editTransport == null ? NotFound() : Ok(editTransport);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -79,7 +81,7 @@ namespace TourBooking.Controllers
         public async Task<IActionResult> Delete(string id)
         {
 
-            await _countryService.DeleteAsync(id);
+            await _transportService.DeleteAsync(id);
             await _unitOfWork.SaveChangesAsync();
             return Ok($"Delete Successful {id}");
         }

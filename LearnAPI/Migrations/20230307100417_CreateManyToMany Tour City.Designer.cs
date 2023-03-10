@@ -4,6 +4,7 @@ using LearnAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LearnAPI.Migrations
 {
     [DbContext(typeof(TourDatabaseContext))]
-    partial class TourDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230307100417_CreateManyToMany Tour City")]
+    partial class CreateManyToManyTourCity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace LearnAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CityTour", b =>
+                {
+                    b.Property<string>("CitysId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ToursId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CitysId", "ToursId");
+
+                    b.HasIndex("ToursId");
+
+                    b.ToTable("CityTour");
+                });
 
             modelBuilder.Entity("LearnAPI.Models.City", b =>
                 {
@@ -137,7 +155,7 @@ namespace LearnAPI.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("EndDate")
+                    b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("MaxTourists")
@@ -150,7 +168,7 @@ namespace LearnAPI.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<DateTime?>("StartDate")
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TransportId")
@@ -161,29 +179,6 @@ namespace LearnAPI.Migrations
                     b.HasIndex("TransportId");
 
                     b.ToTable("Tour");
-                });
-
-            modelBuilder.Entity("LearnAPI.Models.ToursCities", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CityId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("TourId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("TourId");
-
-                    b.ToTable("ToursCities");
                 });
 
             modelBuilder.Entity("LearnAPI.Models.ToursSight", b =>
@@ -249,6 +244,21 @@ namespace LearnAPI.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("CityTour", b =>
+                {
+                    b.HasOne("LearnAPI.Models.City", null)
+                        .WithMany()
+                        .HasForeignKey("CitysId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearnAPI.Models.Tour", null)
+                        .WithMany()
+                        .HasForeignKey("ToursId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("LearnAPI.Models.City", b =>
                 {
                     b.HasOne("LearnAPI.Models.Country", "Country")
@@ -308,23 +318,6 @@ namespace LearnAPI.Migrations
                     b.Navigation("Transport");
                 });
 
-            modelBuilder.Entity("LearnAPI.Models.ToursCities", b =>
-                {
-                    b.HasOne("LearnAPI.Models.City", "City")
-                        .WithMany("ToursCities")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("LearnAPI.Models.Tour", "Tour")
-                        .WithMany("ToursCities")
-                        .HasForeignKey("TourId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("City");
-
-                    b.Navigation("Tour");
-                });
-
             modelBuilder.Entity("LearnAPI.Models.ToursSight", b =>
                 {
                     b.HasOne("LearnAPI.Models.Sight", "Sight")
@@ -347,8 +340,6 @@ namespace LearnAPI.Migrations
             modelBuilder.Entity("LearnAPI.Models.City", b =>
                 {
                     b.Navigation("Sights");
-
-                    b.Navigation("ToursCities");
                 });
 
             modelBuilder.Entity("LearnAPI.Models.Country", b =>
@@ -369,8 +360,6 @@ namespace LearnAPI.Migrations
             modelBuilder.Entity("LearnAPI.Models.Tour", b =>
                 {
                     b.Navigation("OrderDetails");
-
-                    b.Navigation("ToursCities");
 
                     b.Navigation("ToursSights");
                 });
