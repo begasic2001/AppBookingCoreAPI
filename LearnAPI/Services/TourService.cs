@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LearnAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using TourBooking.Dto;
 using TourBooking.Interfaces;
 using TourBooking.Repositories;
@@ -60,6 +61,27 @@ namespace TourBooking.Services
             }
 
             _context.Tour.Add(tour);
+        }
+
+        public async Task UpdateAsyncJoin(string id , TourDto vm)
+        {
+            var tour = await _context.Tour.Include(x => x.ToursCities)
+                        .ThenInclude(y => y.City).FirstOrDefaultAsync(x => x.Id == id);
+            
+            var existingIds = tour.ToursCities.Select(x => x.CityId).ToList();
+            var selectedIds = vm.CityId.ToList();
+            var toAdd = selectedIds.Except(existingIds).ToList();
+            var toRemove = existingIds.Except(selectedIds).ToList();
+            tour.ToursCities = tour.ToursCities.Where(x => !toRemove.Contains(x.CityId)).ToList();
+            foreach (var item in toAdd)
+            {
+                tour.ToursCities.Add(new ToursCities()
+                {
+                    CityId = item
+                });
+            }
+            var entity = _mapper.Map<Tour>(tour);
+            await _repository.UpdateAsync(entity);
         }
     }
 }

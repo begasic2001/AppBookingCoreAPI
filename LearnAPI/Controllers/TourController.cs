@@ -1,4 +1,5 @@
 ﻿using LearnAPI.Models;
+using LoggerService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,17 +17,21 @@ namespace TourBooking.Controllers
         private readonly ITourService _tourService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly TourDatabaseContext _context;
-        public TourController(ITourService tourService, IUnitOfWork unitOfWork,TourDatabaseContext context)
+        private readonly ILoggerService _logger;
+
+        public TourController(ITourService tourService, IUnitOfWork unitOfWork,TourDatabaseContext context,ILoggerService logger)
         {
             _tourService = tourService;
             _unitOfWork = unitOfWork;
             _context = context;
+            _logger = logger;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try
             {
+                _logger.LogInfo("Get All Country !!!!!!!");
                 var a = await _tourService.GetJoin();
                
                 return Ok(a);
@@ -56,9 +61,7 @@ namespace TourBooking.Controllers
             {
                 await _tourService.AddAsyncJoin(tour);
                 await _unitOfWork.SaveChangesAsync();
-                Console.WriteLine(tour.Id);
-                var newTour = await _tourService.GetByIdAsync(tour.Id);
-                return newTour == null ? NotFound() : Ok(newTour);
+                return Ok("Created !!!!");
             }
             catch(Exception ex)
             {
@@ -70,10 +73,10 @@ namespace TourBooking.Controllers
         {
             try
             {
-                await _tourService.UpdateAsync(id, tour);
+                await _tourService.UpdateAsyncJoin(id, tour);
+                //await _tourService.UpdateAsync(id, tour);
                 await _unitOfWork.SaveChangesAsync();
-                var editTour = await _tourService.GetByIdAsync(tour.Id);
-                return editTour == null ? NotFound() : Ok(editTour);
+                return  Ok("Updated !!!!");
             }
             catch (Exception ex)
             {

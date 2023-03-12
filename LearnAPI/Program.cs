@@ -12,11 +12,13 @@ using TourBooking.Interfaces;
 using TourBooking.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
-//LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), */nlog.Config*));
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 // Add services to the container.
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<Autofac.ContainerBuilder>(autofacConfigure =>
 {
+    //autofacConfigure.
+    //    RegisterType<LoggerServiceManage>().As<ILoggerService>();
     autofacConfigure
         .RegisterType<Repository<Country>>().As<IRepository<Country>>();
     autofacConfigure
@@ -54,7 +56,7 @@ builder.Host.ConfigureContainer<Autofac.ContainerBuilder>(autofacConfigure =>
 
 
 });
-//builder.Services.AddScoped<ILoggerService, LoggerService>();
+builder.Services.AddScoped<ILoggerService, LoggerServiceManage>();
 builder.Services.AddControllers();  
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

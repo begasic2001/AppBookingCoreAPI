@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LoggerService
 {
-    internal class LoggerService : ILoggerService
+    public class LoggerServiceManage : ILoggerService
        
     {
         private static ILogger _logger = LogManager.GetCurrentClassLogger();

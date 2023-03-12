@@ -8,6 +8,7 @@ namespace TourBooking.Interfaces
         Task<IEnumerable<Tour>> GetJoin();
         Task<Tour> GetJoinById(string id);
         Task AddAsyncJoin(TourDto tour);
+        Task UpdateAsyncJoin(string id, TourDto tour);
 
     }
 }

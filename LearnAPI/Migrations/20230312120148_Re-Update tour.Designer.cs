@@ -4,6 +4,7 @@ using LearnAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LearnAPI.Migrations
 {
     [DbContext(typeof(TourDatabaseContext))]
-    partial class TourDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20230312120148_Re-Update tour")]
+    partial class ReUpdatetour
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -312,13 +315,11 @@ namespace LearnAPI.Migrations
                 {
                     b.HasOne("LearnAPI.Models.City", "City")
                         .WithMany("ToursCities")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CityId");
 
                     b.HasOne("LearnAPI.Models.Tour", "Tour")
                         .WithMany("ToursCities")
-                        .HasForeignKey("TourId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TourId");
 
                     b.Navigation("City");
 

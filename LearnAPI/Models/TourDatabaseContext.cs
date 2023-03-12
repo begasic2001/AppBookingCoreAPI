@@ -20,11 +20,11 @@ namespace LearnAPI.Models
             modelBuilder.Entity<Tour>()
                 .HasMany(tc => tc.ToursCities)
                 .WithOne(t => t.Tour)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<City>()
                 .HasMany(tc => tc.ToursCities)
                 .WithOne(c => c.City)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ToursSight>()
                   .HasKey(ts => new { ts.SightId, ts.TourId });
