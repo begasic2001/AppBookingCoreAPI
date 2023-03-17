@@ -56,7 +56,7 @@ namespace TourBooking.Repositories
             {
                 var query = _entity.Include(includes.First());
                 foreach (var include in includes.Skip(1))
-                {Console.WriteLine(include);
+                {
                     query = query.Include(include);
                 }
                     

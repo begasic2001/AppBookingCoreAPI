@@ -24,30 +24,5 @@ namespace TourBooking.Services
             _mapper = mapper;
             _context = context;
         }
-
-        //public IEnumerable<object> GetJoin()
-
-        //{
-
-        //    var res = _context.City.Include(c => c.Country).Select(c => new
-        //    {
-        //        Id = c.Id,
-        //        CityName = c.CityName,
-        //        Country = c.Country.CountryName
-        //    }).ToList();
-        //    return res;
-        //}
-
-        public IEnumerable<object> GetJoinById(string id)
-        {
-            var res = _context.City.Where(a => a.Id == id).Include(c => c.Country).ToList().Select(c => new
-            {
-                Id = c.Id,
-                CityName = c.CityName,
-                Country = c.Country
-            }).ToList();
-            return res;
-        }
-
     }
 }

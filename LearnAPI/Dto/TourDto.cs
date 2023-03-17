@@ -12,7 +12,8 @@ namespace TourBooking.Dto
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int MaxTourists { get; set; }
-        //public string[]? TransportId { get; set; }
+        public string? TransportId { get; set; }
         public string[] CityId { get; set; }
+        public string[] SightId { get; set; }
     }
 }

@@ -5,11 +5,9 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourBooking", "LearnAPI\TourBooking.csproj", "{84054373-C093-4B2F-8959-B2B21FACDD48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerManager", "LoggerService\LoggerManager.csproj", "{78F6A9E2-5955-4CE8-8906-649C0BBE40D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourBooking.Logger", "LoggerService\TourBooking.Logger.csproj", "{78F6A9E2-5955-4CE8-8906-649C0BBE40D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkAbility", "NetworkAbility\NetworkAbility.csproj", "{E6EB393C-6138-4723-A46A-D4753D0E3D46}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkUtility.Test", "NetworkUtility.Test\NetworkUtility.Test.csproj", "{4C80A247-7131-4677-9720-E63DA5CA15F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourBooking.Test", "NetworkUtility.Test\TourBooking.Test.csproj", "{4C80A247-7131-4677-9720-E63DA5CA15F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{78F6A9E2-5955-4CE8-8906-649C0BBE40D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78F6A9E2-5955-4CE8-8906-649C0BBE40D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78F6A9E2-5955-4CE8-8906-649C0BBE40D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E6EB393C-6138-4723-A46A-D4753D0E3D46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6EB393C-6138-4723-A46A-D4753D0E3D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E6EB393C-6138-4723-A46A-D4753D0E3D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E6EB393C-6138-4723-A46A-D4753D0E3D46}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4C80A247-7131-4677-9720-E63DA5CA15F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C80A247-7131-4677-9720-E63DA5CA15F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C80A247-7131-4677-9720-E63DA5CA15F6}.Release|Any CPU.ActiveCfg = Release|Any CPU

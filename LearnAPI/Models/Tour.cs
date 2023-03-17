@@ -16,9 +16,10 @@ namespace LearnAPI.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int MaxTourists { get; set; }
+        public string? TransportId { get; set; }
         public Transport? Transport { get; set; }
-        public ICollection<ToursCities> ToursCities { get; set; } = new List<ToursCities>();
-        public ICollection<ToursSight>? ToursSights { get; set; }
+        public  ICollection<ToursCities> ToursCities { get; set; } = new List<ToursCities>();
+        public ICollection<ToursSight> ToursSights { get; set; } = new List<ToursSight>();
         public ICollection<OrderDetail>? OrderDetails { get; set; }
     }
 }

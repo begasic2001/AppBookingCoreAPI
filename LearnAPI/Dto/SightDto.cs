@@ -11,6 +11,6 @@ namespace TourBooking.Dto
        
         public double SightForMoney { get; set; }
         public string Picture { get; set; }
-        public CityDto? City { get; set; }
+        public string? CityId { get; set; }
     }
 }

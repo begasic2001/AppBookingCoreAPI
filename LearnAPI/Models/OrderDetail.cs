@@ -5,7 +5,7 @@ namespace LearnAPI.Models
     public class OrderDetail
     {
         [Key]
-        public string Id { get; set; }
+        public string Guid { get; set; }
         public int quantity { get; set; }
         public double SinglePrice { get; set; }
         public string OrderId { get; set; }

@@ -75,8 +75,7 @@ namespace TourBooking.Services
             {
                 var entity = _mapper.Map<TEntity>(entityTDto);
                 await _repository.UpdateAsync(entity);
-            }
-            
+            }  
         }
     }
 }

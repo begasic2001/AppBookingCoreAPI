@@ -10,6 +10,10 @@ using TourBooking.Services;
 using System.Text.Json.Serialization;
 using TourBooking.Interfaces;
 using TourBooking.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
@@ -17,8 +21,8 @@ LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nl
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<Autofac.ContainerBuilder>(autofacConfigure =>
 {
-    //autofacConfigure.
-    //    RegisterType<LoggerServiceManage>().As<ILoggerService>();
+    autofacConfigure.
+        RegisterType<LoggerServiceManage>().As<ILoggerService>();
     autofacConfigure
         .RegisterType<Repository<Country>>().As<IRepository<Country>>();
     autofacConfigure
@@ -47,8 +51,8 @@ builder.Host.ConfigureContainer<Autofac.ContainerBuilder>(autofacConfigure =>
       .RegisterType<TransportService>().As<ITransportService>();
     autofacConfigure
       .RegisterType<TourService>().As<ITourService>();
-    //  autofacConfigure
-    //.RegisterType<UserService>().As<IUserService>();
+        autofacConfigure
+      .RegisterType<UserService>().As<IUserService>();
     //  autofacConfigure
     //.RegisterType<OrderService>().As<IOrderService>();
     //  autofacConfigure
@@ -56,7 +60,6 @@ builder.Host.ConfigureContainer<Autofac.ContainerBuilder>(autofacConfigure =>
 
 
 });
-builder.Services.AddScoped<ILoggerService, LoggerServiceManage>();
 builder.Services.AddControllers();  
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -66,10 +69,31 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddMvc()
     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+builder.Services.AddIdentity<User,IdentityRole>()
+    .AddEntityFrameworkStores<TourDatabaseContext>().AddDefaultTokenProviders();
 builder.Services.AddDbContext<TourDatabaseContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultString"));
 });
+
+builder.Services.AddAuthentication(options => {
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options => {
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+    };
+});
+
 var app = builder.Build();
 
 

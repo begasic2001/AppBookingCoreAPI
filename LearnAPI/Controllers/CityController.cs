@@ -1,6 +1,9 @@
 ﻿using LearnAPI.Models;
+using LoggerService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Metrics;
 using System.Net;
 using TourBooking.Dto;
 using TourBooking.Helpers;
@@ -14,17 +17,22 @@ namespace TourBooking.Controllers
     {
         private readonly ICityService _cityService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILoggerService _logger;
+        private readonly TourDatabaseContext _context;
 
-        public CityController(ICityService cityService, IUnitOfWork unitOfWork)
+        public CityController(ICityService cityService, IUnitOfWork unitOfWork, ILoggerService logger, TourDatabaseContext context)
         {
             _cityService = cityService;
             _unitOfWork = unitOfWork;
+            _logger = logger;
+            _context = context;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try
             {
+                _logger.LogInfo("Get All City !!!!");
                 var res = _cityService.GetAllJoin(new string[]{"Country"}).Select(x => 
                     new
                     {
@@ -33,11 +41,13 @@ namespace TourBooking.Controllers
                         CountryName = x.Country.CountryName
                     }
                 );
+                _logger.LogInfo($"Get List ${res}");
                 return Ok(res);
             }
-            catch 
+            catch(Exception ex) 
             {
-                return BadRequest();
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [HttpGet("{id}")]
@@ -45,7 +55,8 @@ namespace TourBooking.Controllers
         {
             try
             {
-                var a =  _cityService.GetMultiJoin(c=>c.Id == id, new string[] { "Country" }).Select(x =>
+                _logger.LogInfo($"Get City By Id  ${id}");
+                var res =  _cityService.GetMultiJoin(c=>c.Id == id, new string[] { "Country" }).Select(x =>
                     new
                     {
                         Id = x.Id,
@@ -53,11 +64,13 @@ namespace TourBooking.Controllers
                         CountryName = x.Country.CountryName
                     }
                 );
-                return Ok(a);
+                _logger.LogInfo($"Get List ${res}");
+                return Ok(res);
             }
-            catch
+            catch(Exception ex)
             {
-                return BadRequest();
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [HttpPost]
@@ -65,15 +78,23 @@ namespace TourBooking.Controllers
         {
             try
             {
-                Console.WriteLine(city.CountryId);
+                _logger.LogInfo("Create New City");
+                var hasCity = _context.City.Where(c => c.CityName.Trim().ToLower() == city.CityName.Trim().ToLower()).FirstOrDefault();
+                if (hasCity != null)
+                {
+                    return Conflict($"{city.CityName} already exists!");
+                }
+                city.CityName = city.CityName.Trim().ToLower();
                 await _cityService.AddAsync(city);
                 await _unitOfWork.SaveChangesAsync();
+                _logger.LogInfo("City Save Successfully!!");
                 var newCity = await _cityService.GetByIdAsync(city.Id);
                 return newCity == null ? NotFound() : Ok(newCity);
             }
-            catch
+            catch(Exception ex) 
             {
-                return BadRequest();
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
             }
         }
         [HttpPut("{id}")]
@@ -81,23 +102,50 @@ namespace TourBooking.Controllers
         {
             try
             {
+                _logger.LogInfo($"Update City By Id {id}");
+                if (city.Id != id)
+                {
+                    return NotFound(id);
+                }
+                //var hasCityByid = _context.City.Where(c => c.CityName.Trim().ToLower() == city.CityName.Trim().ToLower() && c.Id == id).FirstOrDefault();
+                //if (hasCityByid != null)
+                //{
+                //    return Conflict($"{city.CityName} already exists!");
+                //}
+                city.CityName = city.CityName.Trim().ToLower();
                 await _cityService.UpdateAsync(id, city);
                 await _unitOfWork.SaveChangesAsync();
+                _logger.LogInfo($"Edit Successfully City By Id {id}");
                 var editCity = await _cityService.GetByIdAsync(city.Id);
                 return editCity == null ? NotFound() : Ok(editCity);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return BadRequest(ex.Message);
             }
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            try
+            {
 
-            await _cityService.DeleteAsync(id);
-            await _unitOfWork.SaveChangesAsync();
-            return Ok($"Delete Successful {id}");
+                _logger.LogInfo($"Delete City By Id {id}");
+                
+                    await _cityService.DeleteAsync(id);
+                    await _unitOfWork.SaveChangesAsync();
+                    _logger.LogInfo($"Delete Successful {id}");
+                    return Ok($"Delete Successful {id}");
+               
+                
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(ex.Message);
+            }
+            
         }
     }
 }

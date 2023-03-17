@@ -16,7 +16,8 @@ namespace LearnAPI.Models
         [Required(ErrorMessage = "This field is not empty!!!")]
         [Column(TypeName = "nvarchar(255)")]
         public string Picture { get; set;}
+        public string? CityId { get; set; }
         public City City { get; set; }
-        public ICollection<ToursSight>? ToursSights { get; set; }
+        public ICollection<ToursSight> ToursSights { get; set; } = new List<ToursSight>();
     }
 }
